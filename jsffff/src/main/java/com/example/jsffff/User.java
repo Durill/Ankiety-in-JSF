@@ -3,8 +3,10 @@ package com.example.jsffff;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
 
 @ManagedBean
@@ -172,8 +174,6 @@ public class User {
         }
     }
 
-    private Integer opp;
-
     public ArrayList getAllAnswers() throws Exception{
         ArrayList listOfAnswers = new ArrayList();
         Connection connection = null;
@@ -192,7 +192,6 @@ public class User {
                 listOfAnswers.add(rs.getString("answer5"));
             }
             listOfAnswers.removeIf(Objects::isNull);
-            opp = listOfAnswers.size();
         }catch (Exception e){
             System.out.println(e);
         }finally {
@@ -248,20 +247,81 @@ public class User {
         }catch (Exception e){
             System.out.println(e);
             return "error";
+        }finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
         }
     }
 
     public String deleteAnswer(){
+        FacesContext fc = FacesContext.getCurrentInstance();
+        Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
+        Integer field_vs_index = Integer.parseInt(params.get("action"))+1;
         Connection connection = null;
+        Boolean answersToDowngrade = false;
         try{
             DB_connection db_connection = new DB_connection();
             connection = db_connection.getConnection();
-            String query = "DELETE ";
+            String answerToDelete;
+            switch (field_vs_index){
+                case 1: answerToDelete = "answer1";
+                break;
+                case 2: answerToDelete = "answer2";
+                break;
+                case 3: answerToDelete = "answer3";
+                break;
+                case 4: answerToDelete = "answer4";
+                break;
+                case 5: answerToDelete = "answer5";
+                break;
+                default: answerToDelete = null;
+            }
+
+            if(field_vs_index<getAllAnswers().size()+1){
+                answersToDowngrade = true;
+            }
+
+            String query = "UPDATE user SET "+answerToDelete+"=null WHERE name='"+name+"'";
+            System.out.println(query);
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.executeUpdate();
+
+            if(answersToDowngrade){
+                String answersAbove="";
+                String deleteLast = "answer5=null";
+                for(int i=field_vs_index;i<5;i++){
+                    int j = i+1;
+                    answersAbove+="answer"+i+"=answer"+j+", ";
+                    System.out.println(answersAbove);
+                }
+                String downgradeQuery = "UPDATE user SET "+answersAbove+deleteLast+" WHERE name='"+name+"'";
+                System.out.println(downgradeQuery);
+                PreparedStatement statementDowngrade = connection.prepareStatement(downgradeQuery);
+                statementDowngrade.executeUpdate();
+            }
+
         }catch (Exception e){
             System.out.println(e);
             return "error";
+        }finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
         }
         return "modify";
+    }
+
+    public void checkWhichAnswerIsLast(Integer numberofAnswerToDelete){
+
     }
 
     public User(){}
