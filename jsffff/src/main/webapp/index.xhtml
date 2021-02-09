@@ -9,16 +9,15 @@ xmlns:ui="http://java.sun.com/jsf/facelets">
 <h:head>
     <title>JSP - Hello World</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="styles.css" />
 </h:head>
 <h:body>
     <div class="container">
         <div class="row" style="margin-top: 50px;">
             <div class="col"></div>
-            <div class="col" style="background-color: #f3f3f3;padding: 35px 8px;">
+            <div class="col middle-col">
                 <h:form>
                     <div  class="form-group">
-                        <h:inputText value="#{user.numberOfAnswers}" class="form-control"></h:inputText>
                         <label for="name" style="font-weight: bold">Questionaire name:</label>
                         <h:inputText class="form-control" value="#{user.name}" placeholder="Enter name" id="name"></h:inputText>
                         <label for="email" style="font-weight: bold">Email address:</label>
