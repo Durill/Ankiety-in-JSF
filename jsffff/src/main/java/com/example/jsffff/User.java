@@ -282,6 +282,8 @@ public class User {
                 default: answerToDelete = null;
             }
 
+            //checking if future deleted answer is inside section and need to be replaced
+            //by higher number answer
             if(field_vs_index<getAllAnswers().size()+1){
                 answersToDowngrade = true;
             }
@@ -291,6 +293,7 @@ public class User {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.executeUpdate();
 
+            //replacing deleted answer with a higher answer number
             if(answersToDowngrade){
                 String answersAbove="";
                 String deleteLast = "answer5=null";
@@ -320,8 +323,78 @@ public class User {
         return "modify";
     }
 
-    public void checkWhichAnswerIsLast(Integer numberofAnswerToDelete){
+    private String answerToEdit;
 
+    public void setAnswerToEdit(String answerToEdit) {
+        this.answerToEdit = answerToEdit;
+    }
+
+    public String getAnswerToEdit() {
+        return answerToEdit;
+    }
+
+    private String answerNumberToEdit;
+
+    public String getAnswerNumberToEdit() {
+        return answerNumberToEdit;
+    }
+
+    public String editAnswer(){
+        FacesContext fc = FacesContext.getCurrentInstance();
+        Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
+        Integer getAnswerNumber = Integer.parseInt(params.get("action"))+1;
+        answerNumberToEdit = Integer.toString(getAnswerNumber);
+        String answerToFind = "u.answer"+getAnswerNumber;
+        Connection connection = null;
+        try {
+            DB_connection db_connection = new DB_connection();
+            connection = db_connection.getConnection();
+            String sql = ("SELECT "+answerToFind+" FROM user u WHERE name='"+name+"'");
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            while (rs.next()){
+                answerToEdit = rs.getString("answer"+getAnswerNumber);
+            }
+
+            return "edit";
+        }catch (Exception e){
+            System.out.println(e);
+            return "error";
+        }finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+    }
+
+    public String updateAnswer(){
+        Connection connection = null;
+        try {
+            DB_connection db_connection = new DB_connection();
+            connection = db_connection.getConnection();
+            String ans = "answer"+answerNumberToEdit;
+            String query = "UPDATE user SET "+ans+"='"+answerToEdit+"' WHERE name='"+name+"'";
+            System.out.println(query);
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.executeUpdate();
+
+            return "modify";
+        }catch (Exception e){
+            System.out.println(e);
+            return "error";
+        }finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
     }
 
     public User(){}
