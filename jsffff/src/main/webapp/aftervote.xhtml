@@ -22,17 +22,19 @@
         <div class="row">
             <div class="col"></div>
             <div class="col middle-col">
-                <h:form>
-                    <ui:repeat value="#{user.allAnswers}" var="u" varStatus="vs">
-                        <div class="form-check eachAnswerDiv">
-                            <p style="font-size: 25px;font-weight: bold">#{u}</p>
-                                <h:commandButton class="btn btn-info button-style" value="Choose" action="#{user.setAnswerForVote}">
-                                    <f:param name="action" value="#{vs.index}" />
-                                </h:commandButton>
-                        </div>
-                    </ui:repeat>
-                    <h:commandButton class="btn btn-success" value="Vote!" action="#{user.voteForAnswer}"/>
-                </h:form>
+                <div class="row">
+                    <div class="col">
+                        <ui:repeat value="#{user.allAnswers}" var="a">
+                            <p>#{a}</p>
+                        </ui:repeat>
+                    </div>
+                    <div class="col">
+                        <ui:repeat value="#{user.allQuantities}" var="q">
+                            <p>#{q}</p>
+                        </ui:repeat>
+                    </div>
+                </div>
+                <a href="modify.xhtml"><button class="btn btn-success">Back to your questionaire</button></a>
             </div>
             <div class="col"></div>
         </div>

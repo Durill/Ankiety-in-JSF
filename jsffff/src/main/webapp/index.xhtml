@@ -19,7 +19,9 @@ xmlns:ui="http://java.sun.com/jsf/facelets">
                 <h:form>
                     <div  class="form-group">
                         <label for="name" style="font-weight: bold">Questionaire name:</label>
-                        <h:inputText class="form-control" value="#{user.name}" placeholder="Enter name" id="name"></h:inputText>
+                        <h:inputText class="form-control" value="#{user.name}" placeholder="Enter name" id="name">
+                            <f:validateLength minimum="3" maximum="45"/>
+                        </h:inputText>
                         <label for="email" style="font-weight: bold">Email address:</label>
                         <h:inputText class="form-control" value="#{user.email}" placeholder="Enter email" id="email"></h:inputText><br/>
                         <h:commandButton class="btn btn-primary" value="Create!" action="#{user.addUser}"></h:commandButton>

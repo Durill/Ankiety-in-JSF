@@ -25,3 +25,7 @@ input{
 .button-style{
     margin: 12px;
 }
+
+.afterVoteDiv{
+    display: inline-block;
+}
