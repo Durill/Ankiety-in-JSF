@@ -29,3 +29,8 @@ input{
 .afterVoteDiv{
     display: inline-block;
 }
+
+.selectedVote{
+    border: #3aa6ff 5px solid;
+    background-color: #bff3ff;
+}

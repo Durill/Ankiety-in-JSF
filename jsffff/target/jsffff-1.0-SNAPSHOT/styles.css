@@ -1,0 +1,36 @@
+body{
+    background-color: #c6bfa4;
+    text-align: center;
+}
+
+input{
+    text-align: center;
+    width: 96%;
+}
+
+.middle-col{
+    background-color: #f3f3f3;
+    padding: 35px 8px;
+}
+
+.eachAnswerDiv{
+    margin: 12px;
+    padding: 10px;
+    border: #3aa6ff 2px solid;
+    border-radius: 15px;
+    background-color: white;
+    color:#3aa6ff;
+}
+
+.button-style{
+    margin: 12px;
+}
+
+.afterVoteDiv{
+    display: inline-block;
+}
+
+.selectedVote{
+    border: #3aa6ff 5px solid;
+    background-color: #bff3ff;
+}

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+    <title>Modify your Questionaire</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js" type="text/javascript"></script>
+
+</h:head>
+<h:body>
+    <h1>#{user.name}</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col"></div>
+            <div class="col middle-col">
+
+                <h:form>
+                    <ui:repeat value="#{user.allAnswers}" var="u" varStatus="vs">
+                        <div class="eachAnswerDiv">
+                            <p style="font-size: 25px;font-weight: bold" id="ans#{vs.index}">#{u}</p>
+                            <h:commandButton class="btn btn-danger button-style" value="Delete" action="#{user.deleteAnswer}">
+                            <f:param name="action" value="#{vs.index}" />
+                            </h:commandButton>
+
+                            <h:commandButton class="btn btn-info button-style" value="Edit" action="#{user.editAnswer}">
+                                <f:param name="action" value="#{vs.index}" />
+                            </h:commandButton>
+                            <hr style="height: 2px;"></hr>
+                        </div>
+                    </ui:repeat>
+                </h:form>
+
+                <h:form>
+                    <div  class="form-group">
+                        <label style="font-weight: bold">Add new answer:</label>
+                        <h:inputText class="form-control" value="#{user.answersToAdd}" id="answer#{user.amountOfAnswersInList}"></h:inputText><br/>
+                        <h:commandButton class="btn btn-primary" value="Add!" action="#{user.addAnswers}"></h:commandButton>
+                    </div>
+
+                </h:form>
+                <a href="vote.xhtml"><button class="btn btn-success">Go Vote</button></a>
+            </div>
+            <div class="col"></div>
+        </div>
+    </div>
+<script type="text/javascript">
+    $(document).ready(function (){
+       if($("#ans4")){
+            $("#j_idt15:answer6").attr("disabled", true);
+       }
+    });
+</script>
+</h:body>
+</html>

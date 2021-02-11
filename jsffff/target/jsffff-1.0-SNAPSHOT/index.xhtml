@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+    <title>JSP - Hello World</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="styles.css"/>
+</h:head>
+<h:body>
+    <div class="container">
+        <div class="row" style="margin-top: 50px;">
+            <div class="col"></div>
+            <div class="col middle-col">
+                <h:form>
+                    <div class="form-group">
+                        <label for="name" style="font-weight: bold">Questionaire name:</label>
+                        <h:inputText class="form-control" value="#{user.name}" placeholder="Enter name" id="name">
+                            <f:validateLength minimum="3" maximum="45"/>
+                        </h:inputText>
+                        <label for="email" style="font-weight: bold">Email address:</label>
+                        <h:inputText class="form-control" value="#{user.email}" placeholder="Enter email" id="email"
+                        required="true"
+                        requiredMessage="Please enter your email address"
+                        validatorMessage="Invalid email format">
+                            <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
+                        </h:inputText><br/>
+                        <h:commandButton class="btn btn-primary" value="Create!"
+                                         action="#{user.addUser}"></h:commandButton>
+                    </div>
+
+                </h:form>
+            </div>
+            <div class="col"></div>
+        </div>
+    </div>
+</h:body>
+</html>

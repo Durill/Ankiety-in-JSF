@@ -6,9 +6,6 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets">
-<f:view>
-    <h:outputLabel value="Modify"/>
-</f:view>
 <h:head>
     <title>Modify your Questionaire</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
@@ -26,7 +23,7 @@
                 <h:form>
                     <ui:repeat value="#{user.allAnswers}" var="u" varStatus="vs">
                         <div class="eachAnswerDiv">
-                            <p style="font-size: 25px;font-weight: bold">#{u}</p>
+                            <p style="font-size: 25px;font-weight: bold" id="ans#{vs.index}">#{u}</p>
                             <h:commandButton class="btn btn-danger button-style" value="Delete" action="#{user.deleteAnswer}">
                             <f:param name="action" value="#{vs.index}" />
                             </h:commandButton>
@@ -52,6 +49,5 @@
             <div class="col"></div>
         </div>
     </div>
-
 </h:body>
 </html>

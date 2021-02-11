@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @ManagedBean
@@ -16,13 +16,12 @@ import javax.validation.constraints.Size;
 public class User {
 
     private int id=0;
-    
-    @NotNull
+
     @Size(min = 3)
     private String name;
 
     @Email
-    @NotNull
+    @NotEmpty
     private String email;
 
     private String answersToAdd;
@@ -56,6 +55,7 @@ public class User {
         try{
             DB_connection db_connection = new DB_connection();
             connection = db_connection.getConnection();
+
             String sql = "INSERT INTO user(id, name, email) VALUES('"+id+"','"+name+"','"+email+"')";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.executeUpdate();
@@ -346,6 +346,7 @@ public class User {
             }
         }
     }
+
 
     private String extractAnswerFromMappedNumber(Integer mappedNumber) {
         String answerToDelete;
