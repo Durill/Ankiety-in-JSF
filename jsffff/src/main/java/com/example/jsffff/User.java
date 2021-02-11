@@ -1,42 +1,31 @@
 package com.example.jsffff;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @ManagedBean
 @SessionScoped
 public class User {
 
     private int id=0;
+    
+    @NotNull
+    @Size(min = 3)
     private String name;
+
+    @Email
+    @NotNull
     private String email;
 
-    private Integer numberOfAnswers=1;
-    private String answer1;
-    private Integer quantity1=0;
-    private String answer2;
-    private Integer quantity2=0;
-    private String answer3;
-    private Integer quantity3=0;
-    private String answer4;
-    private Integer quantity4=0;
-    private String answer5;
-    private Integer quantity5=0;
     private String answersToAdd;
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
 
     public void setName(String name) {
         this.name = name;
@@ -54,94 +43,6 @@ public class User {
         return email;
     }
 
-    public void setNumberOfAnswers(Integer numberOfAnswers) {
-        this.numberOfAnswers = numberOfAnswers;
-    }
-
-    public Integer getNumberOfAnswers() {
-        return numberOfAnswers;
-    }
-
-    public void setAnswer1(String answer1) {
-        this.answer1 = answer1;
-    }
-
-    public String getAnswer1() {
-        return answer1;
-    }
-
-    public void setAnswer2(String answer2) {
-        this.answer2 = answer2;
-    }
-
-    public String getAnswer2() {
-        return answer2;
-    }
-
-    public void setAnswer3(String answer3) {
-        this.answer3 = answer3;
-    }
-
-    public String getAnswer3() {
-        return answer3;
-    }
-
-    public void setAnswer4(String answer4) {
-        this.answer4 = answer4;
-    }
-
-    public String getAnswer4() {
-        return answer4;
-    }
-
-    public void setAnswer5(String answer5) {
-        this.answer5 = answer5;
-    }
-
-    public String getAnswer5() {
-        return answer5;
-    }
-
-    public void setQuantity1(Integer quantity1) {
-        this.quantity1 = quantity1;
-    }
-
-    public Integer getQuantity1() {
-        return quantity1;
-    }
-
-    public void setQuantity2(Integer quantity2) {
-        this.quantity2 = quantity2;
-    }
-
-    public Integer getQuantity2() {
-        return quantity2;
-    }
-
-    public void setQuantity3(Integer quantity3) {
-        this.quantity3 = quantity3;
-    }
-
-    public Integer getQuantity3() {
-        return quantity3;
-    }
-
-    public void setQuantity4(Integer quantity4) {
-        this.quantity4 = quantity4;
-    }
-
-    public Integer getQuantity4() {
-        return quantity4;
-    }
-
-    public void setQuantity5(Integer quantity5) {
-        this.quantity5 = quantity5;
-    }
-
-    public Integer getQuantity5() {
-        return quantity5;
-    }
-
     public void setAnswersToAdd(String answersToAdd) {
         this.answersToAdd = answersToAdd;
     }
@@ -155,7 +56,7 @@ public class User {
         try{
             DB_connection db_connection = new DB_connection();
             connection = db_connection.getConnection();
-            String sql = "INSERT INTO user(id, name, email,numberOfAnswers) VALUES('"+id+"','"+name+"','"+email+"','"+numberOfAnswers+"')";
+            String sql = "INSERT INTO user(id, name, email) VALUES('"+id+"','"+name+"','"+email+"')";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.executeUpdate();
             return "modify";
@@ -174,7 +75,7 @@ public class User {
         }
     }
 
-    public ArrayList getAllAnswers() throws Exception{
+    public ArrayList getAllAnswers(){
         ArrayList listOfAnswers = new ArrayList();
         Connection connection = null;
         try {
@@ -206,11 +107,46 @@ public class User {
         return listOfAnswers;
     }
 
+    public ArrayList getAllQuantities(){
+        ArrayList listOfQuantities = new ArrayList();
+        Connection connection = null;
+        try {
+
+            DB_connection db_connection = new DB_connection();
+            connection = db_connection.getConnection();
+            String sql = ("SELECT u.quantity1, u.quantity2, u.quantity3, u.quantity4, u.quantity5 FROM user u WHERE name='"+name+"'");
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            while(rs.next()){
+                listOfQuantities.add(rs.getInt("quantity1"));
+                listOfQuantities.add(rs.getInt("quantity2"));
+                listOfQuantities.add(rs.getInt("quantity3"));
+                listOfQuantities.add(rs.getInt("quantity4"));
+                listOfQuantities.add(rs.getInt("quantity5"));
+            }
+            int answersInListForQuantities = getAllAnswers().size();
+            for (int i = 4;i>=answersInListForQuantities;i--){
+                listOfQuantities.remove(i);
+            }
+
+        }catch (Exception e){
+            System.out.println(e);
+        }finally {
+            try{
+                if (connection!=null){
+                    connection.close();
+                }
+            }catch (SQLException se){
+                se.printStackTrace();
+            }
+        }
+        return listOfQuantities;
+    }
+
     private String amountOfAnswersInList;
 
     public void setAmountOfAnswersInList() throws Exception {
-        Integer aaf = getAllAnswers().size()+1;
-        String amount = Integer.toString(aaf);
+        String amount = Integer.toString(getAllAnswers().size()+1);
         this.amountOfAnswersInList =amount;
     }
 
@@ -225,22 +161,7 @@ public class User {
             DB_connection db_connection = new DB_connection();
             connection = db_connection.getConnection();
             Integer count = Integer.parseInt(amountOfAnswersInList);
-            String nameOfColumn;
-            switch (count){
-                case 1: nameOfColumn = "answer1";
-                    break;
-                case 2: nameOfColumn = "answer2";
-                    break;
-                case 3: nameOfColumn = "answer3";
-                    break;
-                case 4: nameOfColumn = "answer4";
-                    break;
-                case 5: nameOfColumn = "answer5";
-                    break;
-                default: nameOfColumn = null;
-            }
-            String query = "UPDATE user SET "+nameOfColumn+"='"+answersToAdd+"' WHERE name='"+name+"'";
-            System.out.println(query);
+            String query = "UPDATE user SET "+extractAnswerFromMappedNumber(count)+"='"+answersToAdd+"' WHERE name='"+name+"'";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.executeUpdate();
             return "modify";
@@ -261,26 +182,12 @@ public class User {
     public String deleteAnswer(){
         FacesContext fc = FacesContext.getCurrentInstance();
         Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
-        Integer field_vs_index = Integer.parseInt(params.get("action"))+1;
+        int field_vs_index = Integer.parseInt(params.get("action"))+1;
         Connection connection = null;
-        Boolean answersToDowngrade = false;
+        boolean answersToDowngrade = false;
         try{
             DB_connection db_connection = new DB_connection();
             connection = db_connection.getConnection();
-            String answerToDelete;
-            switch (field_vs_index){
-                case 1: answerToDelete = "answer1";
-                break;
-                case 2: answerToDelete = "answer2";
-                break;
-                case 3: answerToDelete = "answer3";
-                break;
-                case 4: answerToDelete = "answer4";
-                break;
-                case 5: answerToDelete = "answer5";
-                break;
-                default: answerToDelete = null;
-            }
 
             //checking if future deleted answer is inside section and need to be replaced
             //by higher number answer
@@ -288,8 +195,7 @@ public class User {
                 answersToDowngrade = true;
             }
 
-            String query = "UPDATE user SET "+answerToDelete+"=null WHERE name='"+name+"'";
-            System.out.println(query);
+            String query = "UPDATE user SET "+extractAnswerFromMappedNumber(field_vs_index)+"=null WHERE name='"+name+"'";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.executeUpdate();
 
@@ -300,12 +206,13 @@ public class User {
                 for(int i=field_vs_index;i<5;i++){
                     int j = i+1;
                     answersAbove+="answer"+i+"=answer"+j+", ";
-                    System.out.println(answersAbove);
                 }
                 String downgradeQuery = "UPDATE user SET "+answersAbove+deleteLast+" WHERE name='"+name+"'";
-                System.out.println(downgradeQuery);
                 PreparedStatement statementDowngrade = connection.prepareStatement(downgradeQuery);
                 statementDowngrade.executeUpdate();
+                String resetQuantities = "UPDATE user SET quantity1=0, quantity2=0, quantity3=0, quantity4=0, quantity5=0 WHERE  name='"+name+"'";
+                PreparedStatement statementReset = connection.prepareStatement(resetQuantities);
+                statementReset.executeUpdate();
             }
 
         }catch (Exception e){
@@ -342,7 +249,7 @@ public class User {
     public String editAnswer(){
         FacesContext fc = FacesContext.getCurrentInstance();
         Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
-        Integer getAnswerNumber = Integer.parseInt(params.get("action"))+1;
+        int getAnswerNumber = Integer.parseInt(params.get("action"))+1;
         answerNumberToEdit = Integer.toString(getAnswerNumber);
         String answerToFind = "u.answer"+getAnswerNumber;
         Connection connection = null;
@@ -378,7 +285,6 @@ public class User {
             connection = db_connection.getConnection();
             String ans = "answer"+answerNumberToEdit;
             String query = "UPDATE user SET "+ans+"='"+answerToEdit+"' WHERE name='"+name+"'";
-            System.out.println(query);
             PreparedStatement statement = connection.prepareStatement(query);
             statement.executeUpdate();
 
@@ -395,6 +301,68 @@ public class User {
                 se.printStackTrace();
             }
         }
+    }
+
+    Integer answerForVote;
+
+    public void setAnswerForVote() {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
+        answerForVote = Integer.parseInt(params.get("action"))+1;
+    }
+
+    public String voteForAnswer(){
+        String ansSelect = "u.quantity"+answerForVote;
+        String ansUpdate = "quantity"+answerForVote;
+        int currentQuantity=0;
+        Connection connection = null;
+        try {
+            DB_connection db_connection = new DB_connection();
+            connection = db_connection.getConnection();
+
+            String querySelect = "SELECT "+ansSelect+" FROM user u WHERE name='"+name+"'";
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(querySelect);
+            while (rs.next()){
+                currentQuantity = rs.getInt("quantity"+answerForVote);
+            }
+            currentQuantity=currentQuantity+1;
+
+            String queryUpdate = "UPDATE user SET "+ansUpdate+"='"+currentQuantity+"' WHERE name='"+name+"'";
+            PreparedStatement statementUpdate = connection.prepareStatement(queryUpdate);
+            statementUpdate.executeUpdate();
+
+            return "aftervote";
+        }catch (Exception e){
+            System.out.println(e);
+            return "error";
+        }finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+    }
+
+    private String extractAnswerFromMappedNumber(Integer mappedNumber) {
+        String answerToDelete;
+        switch (mappedNumber){
+            case 1: answerToDelete = "answer1";
+                break;
+            case 2: answerToDelete = "answer2";
+                break;
+            case 3: answerToDelete = "answer3";
+                break;
+            case 4: answerToDelete = "answer4";
+                break;
+            case 5: answerToDelete = "answer5";
+                break;
+            default: answerToDelete = null;
+        }
+        return answerToDelete;
     }
 
     public User(){}
