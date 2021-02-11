@@ -37,7 +37,7 @@
                 </h:form>
 
                 <h:form>
-                    <div  class="form-group">
+                    <div  class="form-group #{user.amountOfAnswersInList == 6 ? 'def': ''}" >
                         <label style="font-weight: bold">Add new answer:</label>
                         <h:inputText class="form-control" value="#{user.answersToAdd}" id="answer#{user.amountOfAnswersInList}"></h:inputText><br/>
                         <h:commandButton class="btn btn-primary" value="Add!" action="#{user.addAnswers}"></h:commandButton>
