@@ -25,6 +25,7 @@
                             <p style="font-size: 25px;font-weight: bold">#{u}</p>
                                 <h:commandButton class="btn btn-info button-style" value="Choose" action="#{user.setAnswerForVote}">
                                     <f:param name="action" value="#{vs.index}" />
+                                    <input class="radio-button" type="radio" id="#{vs.index}" name="answer" style="display: none"/>
                                 </h:commandButton>
                         </div>
                     </ui:repeat>

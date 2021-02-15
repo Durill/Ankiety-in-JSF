@@ -11,9 +11,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="styles.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js" type="text/javascript"></script>
-
 </h:head>
-<h:body>
+<h:body onload="if('#{user.amountOfAnswersInList}'>='6'){var x = document.getElementById('adder'); x.remove(); }">
     <h1>#{user.name}</h1>
     <div class="container">
         <div class="row">
@@ -36,8 +35,8 @@
                     </ui:repeat>
                 </h:form>
 
-                <h:form>
-                    <div  class="form-group">
+                <h:form id="adder">
+                    <div  class="form-group " >
                         <label style="font-weight: bold">Add new answer:</label>
                         <h:inputText class="form-control" value="#{user.answersToAdd}" id="answer#{user.amountOfAnswersInList}"></h:inputText><br/>
                         <h:commandButton class="btn btn-primary" value="Add!" action="#{user.addAnswers}"></h:commandButton>
@@ -49,12 +48,6 @@
             <div class="col"></div>
         </div>
     </div>
-<script type="text/javascript">
-    $(document).ready(function (){
-       if($("#ans4")){
-            $("#j_idt15:answer6").attr("disabled", true);
-       }
-    });
-</script>
+
 </h:body>
 </html>

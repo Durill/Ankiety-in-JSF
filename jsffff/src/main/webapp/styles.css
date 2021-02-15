@@ -34,3 +34,7 @@ input{
     border: #3aa6ff 5px solid;
     background-color: #bff3ff;
 }
+
+.radio-button input:checked+p{
+    background-color: red;
+}

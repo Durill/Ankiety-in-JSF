@@ -23,8 +23,9 @@
                     <ui:repeat value="#{user.allAnswers}" var="u" varStatus="vs">
                         <div class="form-check eachAnswerDiv" id="div#{vs.index}">
                             <p style="font-size: 25px;font-weight: bold">#{u}</p>
-                                <h:commandButton class="btn btn-info button-style" value="Choose" action="#{user.setAnswerForVote}">
+                                <h:commandButton class="btn btn-info button-style" value="Choose" action="#{user.setAnswerForVote}" onclick="">
                                     <f:param name="action" value="#{vs.index}" />
+                                    <input class="radio-button" type="radio" id="#{vs.index}" name="answer" style="display: none"/>
                                 </h:commandButton>
                         </div>
                     </ui:repeat>
@@ -34,5 +35,12 @@
             <div class="col"></div>
         </div>
     </div>
+    <script type="text/javascript">
+        $(document).ready(function (){
+            function myF(){
+                $("#div"+"#{vs.index}")
+            }
+        });
+    </script>
 </h:body>
 </html>
