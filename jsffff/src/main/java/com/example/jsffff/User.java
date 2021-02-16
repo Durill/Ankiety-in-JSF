@@ -145,12 +145,12 @@ public class User {
 
     private String amountOfAnswersInList;
 
-    public void setAmountOfAnswersInList() throws Exception {
+    public void setAmountOfAnswersInList(){
         String amount = Integer.toString(getAllAnswers().size()+1);
         this.amountOfAnswersInList =amount;
     }
 
-    public String getAmountOfAnswersInList() throws Exception {
+    public String getAmountOfAnswersInList(){
         setAmountOfAnswersInList();
         return amountOfAnswersInList;
     }
