@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="styles.css"/>
 </h:head>
-<h:body>
+<h:body onload="if('#{user.ifFormExist}'=='1'){alert('Form at that name and email already exist, try something else')}">
     <div class="container">
         <div class="row" style="margin-top: 50px;">
             <div class="col"></div>
