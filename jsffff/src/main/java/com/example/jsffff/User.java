@@ -50,16 +50,30 @@ public class User {
         return answersToAdd;
     }
 
+    private int ifFormExist = 0;
+
+    public int getIfFormExist() {
+        return ifFormExist;
+    }
+
     public String addUser(){
         Connection connection=null;
+
         try{
             DB_connection db_connection = new DB_connection();
             connection = db_connection.getConnection();
+            ifFormExist = 0;
 
-            String sql = "INSERT INTO user(id, name, email) VALUES('"+id+"','"+name+"','"+email+"')";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.executeUpdate();
-            return "modify";
+            if(checkIfExist()){
+                System.out.println("exist");
+                ifFormExist=1;
+                return "index";
+            }else{
+                String sql = "INSERT INTO user(id, name, email) VALUES('"+id+"','"+name+"','"+email+"')";
+                PreparedStatement statement = connection.prepareStatement(sql);
+                statement.executeUpdate();
+                return "modify";
+            }
         }catch (Exception e){
             System.out.println(e);
             return "error";
@@ -75,6 +89,31 @@ public class User {
         }
     }
 
+    private boolean checkIfExist(){
+        String checkName=null;
+        String checkEmail=null;
+        Connection connection;
+        try {
+            DB_connection db_connection = new DB_connection();
+            connection = db_connection.getConnection();
+            String sql = "SELECT u.name, u.email FROM user u WHERE name='" + name + "'";
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            while (rs.next()){
+                checkName = (rs.getString("name"));
+                checkEmail = (rs.getString("email"));
+            }
+            System.out.println(checkName+" = "+name+", "+checkEmail+" = "+email);
+            if(checkName.equals(name) && checkEmail.equals(email)){
+                System.out.println("same");
+                return true;
+            }else return false;
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        return false;
+    }
+
     public ArrayList getAllAnswers(){
         ArrayList listOfAnswers = new ArrayList();
         Connection connection = null;
@@ -82,7 +121,7 @@ public class User {
 
             DB_connection db_connection = new DB_connection();
             connection = db_connection.getConnection();
-            String sql = ("SELECT u.answer1, u.answer2, u.answer3, u.answer4, u.answer5 FROM user u WHERE name='"+name+"'");
+            String sql = "SELECT u.answer1, u.answer2, u.answer3, u.answer4, u.answer5 FROM user u WHERE name='"+name+"'";
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery(sql);
             while(rs.next()){
